@@ -59,6 +59,28 @@
 
 <script>
 
+  function playSound(e){ // listening to events in the window. when key is pressed down, function runs
+  const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`); // making use of ES6 template literals
+  const key = document.querySelector(`div[data-key="${e.keyCode}"]`); 
+  // if you hit a key that does not have a corresponding audio element, it will return NULL
+  if (!audio) return; // stops the function from running 
+
+  audio.currentTime = 0; // 2. hence, we reset the currentTime to 0 ,which rewinds it
+  audio.play(); // 1. if you call .play() on an audio element that is already playing, it will not play again until it ends, hence you wanna rewind it to the start if multiple keydown
+  key.classList.add('playing');// adding the .playing class to it which gives it the highlighted border
+  };
+
+  // do not set a timer because it might interfere with the CSS transition and screw it up, instead we use a transition end event that will fire when the animation stops
+  function removeTransition(e) {
+  if (e.propertyName !== 'transform') return; // skip if it is not a transform
+  this.classList.remove('playing'); // this is equal to the key that is pressed
+  };
+
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition)); // upon end of transition, start function removeTransition
+  window.addEventListener('keydown', playSound);
+  
+
 </script>
 
 
