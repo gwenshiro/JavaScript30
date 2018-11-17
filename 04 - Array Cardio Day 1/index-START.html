@@ -1,3 +1,9 @@
+<!-- Things I learnt:
+1. console.table to return a table!! (omg what?? how did i not know about this?!)
+2. includes()
+3. becoming more familiar with arrow functions
+ -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,32 +33,120 @@
       { first: 'Hanna', last: 'Hammarström', year: 1829, passed: 1909 }
     ];
 
-    const people = ['Beck, Glenn', 'Becker, Carl', 'Beckett, Samuel', 'Beddoes, Mick', 'Beecher, Henry', 'Beethoven, Ludwig', 'Begin, Menachem', 'Belloc, Hilaire', 'Bellow, Saul', 'Benchley, Robert', 'Benenson, Peter', 'Ben-Gurion, David', 'Benjamin, Walter', 'Benn, Tony', 'Bennington, Chester', 'Benson, Leana', 'Bent, Silas', 'Bentsen, Lloyd', 'Berger, Ric', 'Bergman, Ingmar', 'Berio, Luciano', 'Berle, Milton', 'Berlin, Irving', 'Berne, Eric', 'Bernhard, Sandra', 'Berra, Yogi', 'Berry, Halle', 'Berry, Wendell', 'Bethea, Erin', 'Bevan, Aneurin', 'Bevel, Ken', 'Biden, Joseph', 'Bierce, Ambrose', 'Biko, Steve', 'Billings, Josh', 'Biondo, Frank', 'Birrell, Augustine', 'Black, Elk', 'Blair, Robert', 'Blair, Tony', 'Blake, William'];
+    const people = ['Beck, Glenn', 'Becker, Carl', 'Beckett, Samuel', 'Beddoes, Mick', 'Beecher, Henry', 'Beethoven, Ludwig', 'Begin, Menachem', 'Belloc, Hilaire', 'Bellow, Saul', 'Benchley, Robert', 'Benenson, Peter', 'Ben-Gurion, David', 'Benjamin, Walter', 'Benn, Tony', 'Bennington, Chester', 'Benson, Leana', 'Bent, Silas', 'Bentsen, Lloyd', 'Berger, Ric', 'Bergman, Ingmar', 'Berio, Luciano', 'Berle, Milton', 'Berlin, Irving', 'Berne, Eric', 'Bernhard, Sandra', 'Berra, Yogi', 'Berry, Halle', 'Berry, Wendell', 'Bethea, Erin', 'Bevan, Aneurin', 'Bevel, Ken', 'Biden, Joseph', 'Bierce, Ambrose', 'Biko, Steve', 'Billings, Josh', 'Biondo, Frank', 'Birrell, Augustine', 'Black, Elk', 'Blair, Robert', 'Blair, Tony', 'Blake, William']; // 'Last Name, First Name'
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Array.prototype.filter()
     // 1. Filter the list of inventors for those who were born in the 1500's
+    const fifteen = inventors.filter(function(inventor){
+      // for (var i = 0; i < inventors.length; i++) { There is no need to iterate over the array, filter will iterate over it for you
+        if (inventor.year >=1500 && inventor.year <= 1599) {
+          return true; // if we return true, we keep the value. no need to give an else return false as it will automatically return false
+        }
+    });
+
+    console.table(fifteen)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Array.prototype.map()
     // 2. Give us an array of the inventors' first and last names
 
+  // const gettingNames = inventors.map(function(inventor) { return (inventor.first + " " + inventor.last) });
+  // ^ this works, but let's try doing it with arrow functions!
+
+  const gettingNames = inventors.map(inventor => inventor.first + " " + inventor.last);
+  console.log(gettingNames)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     // Array.prototype.sort()
     // 3. Sort the inventors by birthdate, oldest to youngest
+
+  const sorted = inventors.sort(function(a,b) {
+    if (a.year > b.year) {
+      return 1;
+    }
+    else {
+      return -1; // sorts them up or down the array
+    }
+  });
+
+  const ordered = inventors.sort((a, b) => a.year > b.year ? 1 : -1); // shorter method, remember syntax para => condition ? if : else
+  console.log(sorted)
+  console.log(ordered)
+  console.table(ordered)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Array.prototype.reduce()
     // 4. How many years did all the inventors live?
 
+    var sum = 0 // remember, this is a variable to be changed, hence it cannot be a CONST
+
+    for (var i = 0; i < inventors.length; i++) {
+      sum += (inventors[i].passed - inventors[i].year);
+    }
+    console.log(sum)
+    
+    // much shorter...
+    const totalYears = inventors.reduce((total, inventor) => { return total + (inventor.passed - inventor.year) }, 0);
+    console.log(totalYears);
+    
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     // 5. Sort the inventors by years lived
+
+    const oldest = inventors.sort((a, b) => a.passed-a.year > b.passed-b.year ? -1 : 1)
+
+    console.table(oldest)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // 6. create a list of Boulevards in Paris that contain 'de' anywhere in the name
     // https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
+    // this is supposed to run on the Wikipedia page, so I have to comment this out
 
+    // const category = document.querySelector('.mw-category');
+    // const links = Array.from(category.querySelectorAll('a')) 
+    /* ^ look inside the category const for a list of links. you can call queryselector against any existing DOM element to look inside the DOM element. Then, store it as a variable INSTEAD of a nodelist */
+
+    // const links = [...category.querySelectorAll('a')] - or you can make use of the spread operator instead of Array.from() to create the array list by spreading the values inside the array
+    
+    // const de = links
+    //                 .map(link => link.textContent)
+    //                 .filter(a => a.includes('de')); //map first, then filter the mapped array
+
+    // console.log(de);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // 7. sort Exercise
     // Sort the people alphabetically by last name
 
+    const alpha = people.sort((lastOne, nextOne) => {
+      const[aLast, aFirst] = lastOne.split(', ') // splits when it meets a comma and a whitespace
+      const[bLast, bFirst] = nextOne.split(', ')
+      return lastOne > nextOne ? 1 : -1
+    });
+
+    console.log(alpha);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     // 8. Reduce Exercise
     // Sum up the instances of each of these
     const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck' ];
+
+    const transportation = data.reduce(function(obj, item) {
+      if(!obj[item]) { // if the obj[item] does not exist, then create it and initialize it to be 0 first before incrementing. this helps when you want to increase the number of items in the data array as they will still be summed up as compared to when a fixed object is created
+        obj[item] = 0;
+      }
+      obj[item]++;
+      return obj;
+    }, {} ) // starting with a blank object, then we loop over every single item in the data array
+    
+    console.log(transportation)
 
   </script>
 </body>
