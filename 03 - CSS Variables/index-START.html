@@ -1,3 +1,10 @@
+<!-- What I learnt:
+
+1. Custom Properties
+2. Dataset, Data-??
+3. Mousemove, Change -->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,6 +32,17 @@
     /*
       misc styles, nothing to do with CSS variables
     */
+    :root { /* we are making use of custom properties here, learnt something new!*/
+      --base: #ffc600;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+
+    img { 
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
 
     body {
       text-align: center;
@@ -45,6 +63,20 @@
   </style>
 
   <script>
+    // change the different css variables depending on the user input
+  const inputs = document.querySelectorAll('.controls input'); // this will create a nodelist, which is NOT an array. check nodelist methods
+
+  function handleUpdate() { 
+    // this.dataset is an object that will contain all the data attributes from that specific element. In this case, it is data-sizing. Basically, it will return anything that has data-?? in the element and return it in an array
+    const suffix = this.dataset.sizing || '';
+    // console.log(suffix); when you console.log suffix, you will find that when you mousemove over the blur and spacing, it will log px. if you mousemove over the hex code (color), it will return nothing (set by the or operator || '')
+    // document.documentElement.style.setProperty(`--${this.name}`, this.value);  this will enable the value to change, but there is no pixel (px) at the back of the value, so it doesn't change!
+    document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix); 
+  }
+
+  inputs.forEach(input => input.addEventListener('change', handleUpdate)); // trigger the event when there is a change in the slider value ( only when the slider stops ). This does not change the value if the user does not let go of the slider
+  inputs.forEach(input => input.addEventListener('mousemove', handleUpdate)); // this is so that when you move the slider, the values will also change instead of only changing after the slider stops sliding
+
   </script>
 
 </body>
