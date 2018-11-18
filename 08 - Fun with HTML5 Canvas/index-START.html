@@ -1,3 +1,5 @@
+<!--- first time playing around with canvas, really interesting \
+you can also play with global composite operators (which add filters?) such as multiply -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +9,57 @@
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
 <script>
+  const canvas = document.querySelector('#draw');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  ctx.strokeStyle = '#BADA55';
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 10;
+
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+  let hue = 0
+  let direction = true;
+
+  function draw(e) {
+    // console.log(e) this will give us the opportunity to check if the event is working right
+    if(!isDrawing) {
+      return // stops function from running when they are not mouse down
+    }
+    ctx.strokeStyle = `hsl(${hue},100%,50%)`;
+    ctx.beginPath();
+    // start from
+    ctx.moveTo(lastX, lastY);
+    // go to 
+    ctx.lineTo(e.offsetX, e.offsetY)
+    ctx.stroke();
+    [lastX, lastY] = [e.offsetX, e.offsetY]; // es6, destructuring. basically assigning lastX the value of e.offsetX and lastY the value of e.offsetY
+    hue++ // if you go over 360 (max value), it will just reset the color back to 0 hue, but we can also do:
+    if (hue >= 360) {
+      hue = 0;
+    }
+
+    if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+      direction = !direction;
+    }
+    if (direction) { // basically, if direction is True, the size of the paint will be larger
+      ctx.lineWidth++
+    } else { // however, after the linewidth hits 100 and the direction is changed to false, the size of the paint will decrease from 100 until 1, which then triggers direction = !direction again, and the next stroke of paint will increment in size until 100. The process will repeat
+      ctx.lineWidth--
+    }
+  }
+
+  canvas.addEventListener('mousedown', (e) => { // upon mousedown, isDrawing is set to true so the function draw works
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+    });
+  
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseout', () => isDrawing = false); // draw function will not work if mousedown outside of the window
 </script>
 
 <style>

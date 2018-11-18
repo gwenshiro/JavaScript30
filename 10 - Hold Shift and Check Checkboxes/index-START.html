@@ -96,6 +96,34 @@
   </div>
 
 <script>
+
+  const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]'); // this returns a nodelist, that's why we will need to loop it otherwise there will be an error!
+
+  let lastChecked; // declaring without giving a value
+ 
+  function shiftClick(e) {
+    console.log(e);
+    let inBetween = false;
+    if (e.shiftKey && this.checked) { // if shift key is pressed
+      // here we are going to loop over every single checkbox and check if they are checked
+      checkboxes.forEach(checkbox => {
+        if (checkbox === this || checkbox === lastChecked) { // when the script encounters the first check from the top of the page (if bottom checked first then top checked, top == this, if top checked first and bottom last, bottom = this), then inBetween will be true. when it encounters this or lastChecked, inBetween becomes false
+
+          inBetween = !inBetween;;
+          console.log("CHECK ZE IN BETWEENS")
+        }
+
+        if (inBetween) {
+          checkbox.checked = true;
+        }
+
+      });
+    }
+  lastChecked = this;
+  };
+
+  checkboxes.forEach(checkbox => checkbox.addEventListener('click', shiftClick));
+
 </script>
 </body>
 </html>
