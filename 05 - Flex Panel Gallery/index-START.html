@@ -1,3 +1,7 @@
+<!--- Thing I learnt: 
+1. propertyName is insanely useful
+2. should probably have fun with cubic beziar more -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,9 +30,11 @@
     .panels {
       min-height: 100vh;
       overflow: hidden;
+      display:flex;
     }
 
     .panel {
+      flex: 1; /* each of them will split the remaining space evenly amongst themselves*/
       background: #6B0F9C;
       box-shadow: inset 0 0 0 5px rgba(255,255,255,0.1);
       color: white;
@@ -43,6 +49,10 @@
       font-size: 20px;
       background-size: cover;
       background-position: center;
+      justify-content:center;
+      align-items:center;
+      display:flex; /* panels is already a flex conatiner, but we are also going to make every single panel a flex container for the texts. */
+      flex-direction: column;
     }
 
     .panel1 { background-image:url(https://source.unsplash.com/gYl-UtwNg_I/1500x1500); }
@@ -56,7 +66,20 @@
       margin: 0;
       width: 100%;
       transition: transform 0.5s;
+      flex: 1 0 auto;
+      display:flex; 
+      justify-content:center;
+      align-items:center;
     }
+
+    /* When you add the class open-active to any of the panels, the top and bottom text will transition themselves into the image
+    Check the .panel for the transition that is used */
+    .panel > *:first-child {transform: translateY(-100%);}
+    .panel.open-active > *:first-child {transform: translateY(0);}
+
+    .panel > *:last-child {transform: translateY(100%);}
+    .panel.open-active > *:last-child {transform: translateY(0);}
+
 
     .panel p {
       text-transform: uppercase;
@@ -71,6 +94,7 @@
 
     .panel.open {
       font-size: 40px;
+      flex:5; /* This means that when it is open, it push away the other flex items and take up the space of 5 flex items */
     }
 
   </style>
@@ -105,7 +129,21 @@
   </div>
 
   <script>
+    const panels = document.querySelectorAll('.panel');
 
+    function toggleOpen() {
+      this.classList.toggle('open');
+    }
+
+    function toggleActive(e) {
+      // console.log(e.propertyName); This helps us to check which transition end are we trying to target
+      // this will tell you that the transitions are 'flex grow' and 'font size' 
+      if (e.propertyName.includes('flex')) { // if the propertyName of e includes the word flex, toggle open active
+      this.classList.toggle('open-active'); }
+    }
+
+    panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+    panels.forEach(panel => panel.addEventListener('transitionend', toggleActive)); // There are multiple transitions, hence we need to figure out which transition end point do we want to work with to add the open-active class
   </script>
 
 
