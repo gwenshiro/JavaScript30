@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+<!---LMAO @ Cornify
+  1. using splice to search for a specific user input, can be pretty funny xD
+  ---->
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -7,6 +10,21 @@
 </head>
 <body>
 <script>
+
+  const pressed = []; // create an empty array to store the keyboard inputs
+  const secretCode = 'wesbos' /* let's say we only want to look for 'wesbos' in the user input. because it is only 6 characters long, we don't need an entire keylogger to find this input. hence, we sort of implement a 'maximum value'  by splicing */
+
+  window.addEventListener('keyup', (e) => {
+    console.log(e)
+    pressed.push(e.key);
+    pressed.splice(-secretCode.length-1, pressed.length-secretCode.length); /* we need to count from the back because the latest inputs are pushed into the back of the array */
+    if (pressed.join("").includes(secretCode)){
+      console.log("dingding!");
+      cornify_add();
+    }
+    console.log(pressed)
+  });
+
 </script>
 </body>
 </html>

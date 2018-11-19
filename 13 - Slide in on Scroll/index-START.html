@@ -1,3 +1,6 @@
+<!-- :earnt about the debounce to solve the performance issues when using scroll type event. 
+Also, I just realized that you can store comparisons in variables??? Like after 2 months? -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +46,7 @@
   </div>
 
   <script>
-    function debounce(func, wait = 20, immediate = true) {
+    function debounce(func, wait = 20, immediate = true) { /* only run the function once every 20ms. this debounce code can be taken from the internet. this gives you a little bit more control and reduces the hurt on performance when it comes to scroll type events */
       var timeout;
       return function() {
         var context = this, args = arguments;
@@ -57,6 +60,30 @@
         if (callNow) func.apply(context, args);
       };
     }
+
+    const sliderImages = document.querySelectorAll('.slide-in');
+
+    function checkSlide() {
+      // console.log(e) - intitially, at this point, you would notice that each time you scroll you would get about 50 logs back. hence, we need the debounce function to control the frequency of the logging, which reduces the performance hurt */
+
+      /*now, we need to loop over every single image and figure out where the image needs to be shown */
+     sliderImages.forEach(sliderImage => {
+       const slideInAt = (window.scrollY + window.innerHeight) - sliderImage.height / 2; /*this is halfway through the image */
+        //  console.log(window.scrollY) - by logging this, we can actually check the top position when we scroll down. however, for this exercise, we need the bottom value, so we need to do some math */
+        const imageBottom = sliderImage.offsetTop + sliderImage.height; /*bottom of the image*/
+
+        const isHalfShown = slideInAt > sliderImage.offsetTop;
+        const isNotScrolledPast = window.scrollY < imageBottom;
+
+        if(isHalfShown && isNotScrolledPast) {
+          sliderImage.classList.add('active');
+        } else {
+          sliderImage.classList.remove('active')
+        }
+     });
+    }
+
+    window.addEventListener('scroll', debounce(checkSlide));
 
   </script>
 
